@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workspace App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="h-screen bg-gray-100 flex flex-col md:flex-row">
+
+    <div id="mobile-header" class="md:hidden flex items-center justify-between p-4 bg-white shadow-md w-full fixed top-0 left-0 z-20">
+        <button id="mobile-menu-button" class="p-2 rounded-md hover:bg-gray-200">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-gray-700"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+        </button>
+        <span class="text-lg font-semibold text-gray-800">Workspace</span>
+        <div class="w-6 h-6"></div> </div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col">
+        <div class="p-6 flex items-center border-b border-gray-200">
+            <label for="profile-picture-upload-sidebar" class="cursor-pointer">
+                <img id="sidebar-profile-picture" src="" alt="Profile" class="w-10 h-10 rounded-full object-cover mr-3 hidden">
+                <div id="sidebar-profile-initial" class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-xl mr-3">W</div>
+                <input
+                    id="profile-picture-upload-sidebar"
+                    type="file"
+                    accept="image/*"
+                    class="hidden"
+                />
+            </label>
+            <span class="text-xl font-bold text-gray-800">Workspace</span>
+        </div>
+        <nav class="flex-grow p-4 space-y-2">
+            <button id="nav-home" class="flex items-center w-full p-3 rounded-lg text-gray-700 hover:bg-gray-200 transition-colors duration-200 active-nav">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-3"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span>Inicio</span>
+            </button>
+            <button id="nav-search" class="flex items-center w-full p-3 rounded-lg text-gray-700 hover:bg-gray-200 transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-3"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                <span>Buscar</span>
+            </button>
+            <button id="nav-notes" class="flex items-center w-full p-3 rounded-lg text-gray-700 hover:bg-gray-200 transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-3"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                <span>Notas Rápidas</span>
+            </button>
+            <button id="nav-tasks" class="flex items-center w-full p-3 rounded-lg text-gray-700 hover:bg-gray-200 transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-3"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                <span>Mis Tareas</span>
+            </button>
+            <button id="nav-projects" class="flex items-center w-full p-3 rounded-lg text-gray-700 hover:bg-gray-200 transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-3"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                <span>Proyectos</span>
+            </button>
+            <button id="nav-databases" class="flex items-center w-full p-3 rounded-lg text-gray-700 hover:bg-gray-200 transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-3"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 12V7A9 3 0 0 0 21 7v5"></path><path d="M3 12A9 3 0 0 0 21 12"></path><path d="M3 19v-5A9 3 0 0 0 21 14v5"></path><path d="M3 19A9 3 0 0 0 21 19"></path></svg>
+                <span>Bases de Datos</span>
+            </button>
+            <button id="nav-pomodoro" class="flex items-center w-full p-3 rounded-lg text-gray-700 hover:bg-gray-200 transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-3"><path d="M10 2h4"></path><path d="M12 14v-4"></path><path d="M4 13a8 8 0 0 0 16 0V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7Z"></path><path d="M12 22a4 4 0 0 0 4-4H8a4 4 0 0 0 4 4Z"></path></svg>
+                <span>Temporizador Pomodoro</span>
+            </button>
+        </nav>
+        <div class="p-4 border-t border-gray-200 mt-auto">
+            <button id="nav-settings" class="flex items-center w-full p-3 rounded-lg text-gray-700 hover:bg-gray-200 transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-3"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 0-1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 0 1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <span>Configuración</span>
+            </button>
+        </div>
+    </aside>
+
+    <main id="main-content" class="flex-1 overflow-auto p-4 md:p-8 pt-20 md:pt-8">
+        <div class="flex items-center justify-center h-full text-lg font-semibold text-gray-700">Cargando aplicación...</div>
+    </main>
+
+    <div id="app-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+            <p id="modal-message" class="text-lg font-semibold text-gray-800 mb-4"></p>
+            <div class="flex justify-center space-x-4">
+                <button id="modal-confirm-button" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 hidden">Confirmar</button>
+                <button id="modal-close-button" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables for Firebase instances and user data
+        let app;
+        let db;
+        let auth;
+        let currentUserId = null;
+        let currentUserName = 'Sophia Carter';
+        let currentProfilePicture = null;
+        let isFirebaseReady = false;
+
+        // Constants from the environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // Utility function for showing modals
+        function showModal(message, isConfirm = false, onConfirm = null) {
+            const modal = document.getElementById('app-modal');
+            const modalMessage = document.getElementById('modal-message');
+            const confirmButton = document.getElementById('modal-confirm-button');
+            const closeButton = document.getElementById('modal-close-button');
+
+            modalMessage.textContent = message;
+            modal.classList.remove('hidden');
+
+            if (isConfirm) {
+                confirmButton.classList.remove('hidden');
+                confirmButton.onclick = () => {
+                    if (onConfirm) onConfirm();
+                    modal.classList.add('hidden');
+                };
+                closeButton.textContent = 'Cancelar';
+                closeButton.onclick = () => modal.classList.add('hidden');
+            } else {
+                confirmButton.classList.add('hidden');
+                closeButton.textContent = 'Cerrar';
+                closeButton.onclick = () => modal.classList.add('hidden');
+            }
+        }
+
+        // --- Firebase Initialization and Authentication ---
+        async function initializeFirebase() {
+            if (Object.keys(firebaseConfig).length === 0) {
+                console.error("Firebase config is not provided.");
+                isFirebaseReady = true;
+                renderPage('home'); // Render home page even without Firebase
+                return;
+            }
+
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            onAuthStateChanged(auth, async (user) => {
+                console.log("onAuthStateChanged fired. User:", user); // Debugging
+                if (user) {
+                    currentUserId = user.uid;
+                    console.log("Authenticated userId:", currentUserId); // Debugging
+                    // Fetch user profile data
+                    const userProfileRef = doc(db, `artifacts/${appId}/users/${currentUserId}/profile/data`);
+                    const userProfileSnap = await getDoc(userProfileRef);
+                    if (userProfileSnap.exists()) {
+                        const profileData = userProfileSnap.data();
+                        currentUserName = profileData.userName || 'Sophia Carter';
+                        currentProfilePicture = profileData.profilePicture || null;
+                    } else {
+                        // Create a default profile if it doesn't exist
+                        await setDoc(userProfileRef, {
+                            userName: 'Sophia Carter',
+                            profilePicture: null,
+                            email: user.email || 'sophia.carter@email.com'
+                        });
+                        currentUserName = 'Sophia Carter';
+                        currentProfilePicture = null;
+                    }
+                } else {
+                    try {
+                        console.log("No authenticated user found. Attempting anonymous sign-in."); // Debugging
+                        const anonymousUserCredential = await signInAnonymously(auth);
+                        const anonUid = anonymousUserCredential.user.uid;
+                        currentUserId = anonUid;
+                        console.log("Anonymous userId:", currentUserId); // Debugging
+                        // Also create profile data for anonymous user if it doesn't exist
+                        const userProfileRef = doc(db, `artifacts/${appId}/users/${currentUserId}/profile/data`);
+                        const userProfileSnap = await getDoc(userProfileRef);
+                        if (!userProfileSnap.exists()) {
+                            await setDoc(userProfileRef, {
+                                userName: 'Usuario Anónimo',
+                                profilePicture: null,
+                                email: 'anonymous@example.com' // Placeholder email for anonymous
+                            });
+                        }
+                        currentUserName = 'Usuario Anónimo';
+                        currentProfilePicture = null;
+                    } catch (anonError) {
+                        console.error("Error signing in anonymously:", anonError);
+                        currentUserId = null; // If anonymous sign-in also fails, then no userId
+                        currentUserName = 'Invitado';
+                        currentProfilePicture = null;
+                        showModal('Error al iniciar sesión. Algunas funciones pueden no estar disponibles.');
+                    }
+                }
+                isFirebaseReady = true; // This is the crucial line. It's set AFTER userId is determined.
+                updateSidebarProfile(); // Update sidebar after auth state is ready
+                renderPage(currentPage); // Re-render current page with updated user info
+            });
+
+            if (initialAuthToken) {
+                try {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                    console.log("Attempted sign-in with custom token.");
+                } catch (error) {
+                    console.error("Error with custom token sign-in:", error);
+                    // onAuthStateChanged will handle the fallback to anonymous if this fails
+                }
+            }
+        }
+
+        // --- Global State and Navigation ---
+        let currentPage = 'home'; // Default page
+
+        function navigate(page) {
+            currentPage = page;
+            renderPage(page);
+            document.getElementById('sidebar').classList.add('-translate-x-full'); // Hide mobile sidebar
+        }
+
+        function updateSidebarProfile() {
+            const sidebarProfilePic = document.getElementById('sidebar-profile-picture');
+            const sidebarProfileInitial = document.getElementById('sidebar-profile-initial');
+
+            if (currentProfilePicture) {
+                sidebarProfilePic.src = currentProfilePicture;
+                sidebarProfilePic.classList.remove('hidden');
+                sidebarProfileInitial.classList.add('hidden');
+            } else {
+                sidebarProfileInitial.textContent = currentUserName ? currentUserName[0].toUpperCase() : 'W';
+                sidebarProfileInitial.classList.remove('hidden');
+                sidebarProfilePic.classList.add('hidden');
+            }
+        }
+
+        // --- Page Rendering Functions ---
+        function renderPage(page) {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = ''; // Clear current content
+
+            // Update active state in sidebar
+            document.querySelectorAll('#sidebar button').forEach(btn => {
+                btn.classList.remove('bg-blue-100', 'text-blue-700', 'font-semibold');
+            });
+            const activeNavButton = document.getElementById(`nav-${page}`);
+            if (activeNavButton) {
+                activeNavButton.classList.add('bg-blue-100', 'text-blue-700', 'font-semibold');
+            }
+
+            if (!isFirebaseReady) {
+                mainContent.innerHTML = `<div class="flex items-center justify-center h-full text-lg font-semibold text-gray-700">Cargando aplicación...</div>`;
+                return;
+            }
+
+            switch (page) {
+                case 'home':
+                    renderHomePage();
+                    break;
+                case 'notes':
+                    renderNotesPage();
+                    break;
+                case 'projects':
+                    renderProjectsPage();
+                    break;
+                case 'tasks':
+                    renderTasksPage();
+                    break;
+                case 'databases':
+                    renderDatabasesPage();
+                    break;
+                case 'settings':
+                    renderSettingsPage();
+                    break;
+                case 'pomodoro':
+                    renderPomodoroTimerPage();
+                    break;
+                default:
+                    renderHomePage();
+            }
+        }
+
+        // --- Home Page ---
+        function renderHomePage() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="p-4 md:p-8 bg-white rounded-lg shadow-md min-h-full">
+                    <h1 class="text-3xl font-bold text-gray-800 mb-6">Bienvenido de nuevo, ${currentUserName}!</h1>
+
+                    <div class="flex justify-end mb-6">
+                        <button id="home-create-new" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Crear Nuevo
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2">
+                            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Recientes</h2>
+                            <div id="recent-items-list" class="space-y-4">
+                                <p class="text-gray-500">Cargando elementos recientes...</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Enlaces Rápidos</h2>
+                            <div class="space-y-4">
+                                <button id="quick-link-new-page" class="flex items-center justify-center w-full p-4 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition-colors duration-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-blue-600 mr-3"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                                    <span class="font-medium text-gray-800">Nueva Página</span>
+                                </button>
+                                <button id="quick-link-new-note" class="flex items-center justify-center w-full p-4 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition-colors duration-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-blue-600 mr-3"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                                    <span class="font-medium text-gray-800">Nueva Nota</span>
+                                </button>
+                                <button id="quick-link-new-task" class="flex items-center justify-center w-full p-4 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition-colors duration-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-blue-600 mr-3"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                                    <span class="font-medium text-gray-800">Nueva Tarea</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Favoritos</h2>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg shadow-sm">
+                                <div class="flex items-center">
+                                    <span class="text-yellow-500 text-xl mr-3">⭐</span>
+                                    <div>
+                                        <p class="font-medium text-gray-800">Hoja de Ruta del Producto Q3</p>
+                                        <p class="text-sm text-gray-500">Actualizado hace 1 semana</p>
+                                    </div>
+                                </div>
+                                <button class="text-blue-600 hover:text-blue-800">&gt;</button>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg shadow-sm">
+                                <div class="flex items-center">
+                                    <span class="text-yellow-500 text-xl mr-3">⭐</span>
+                                    <div>
+                                        <p class="font-medium text-gray-800">Guías de Marca</p>
+                                        <p class="text-sm text-gray-500">Creado hace 2 meses</p>
+                                    </div>
+                                </div>
+                                <button class="text-blue-600 hover:text-blue-800">&gt;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('home-create-new').onclick = () => navigate('notes');
+            document.getElementById('quick-link-new-page').onclick = () => navigate('notes');
+            document.getElementById('quick-link-new-note').onclick = () => navigate('notes');
+            document.getElementById('quick-link-new-task').onclick = () => navigate('tasks');
+
+            loadRecentItems();
+        }
+
+        // Keep track of current recent items to combine them
+        let currentRecentNotes = [];
+        let currentRecentProjects = [];
+
+        async function loadRecentItems() {
+            console.log("loadRecentItems called. currentUserId:", currentUserId); // Added debug log
+            if (!db || !currentUserId) {
+                document.getElementById('recent-items-list').innerHTML = `<p class="text-gray-500">No se pueden cargar los elementos recientes. Inicia sesión o verifica la configuración de Firebase.</p>`;
+                console.error("loadRecentItems: DB or currentUserId not available.", { db, currentUserId }); // Added debug log
+                return;
+            }
+
+            const recentItemsList = document.getElementById('recent-items-list');
+            recentItemsList.innerHTML = ''; // Clear loading message
+
+            // Fetch recent notes
+            const notesCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/notes`);
+            const qNotes = query(notesCollectionRef, orderBy('lastEdited', 'desc'));
+            onSnapshot(qNotes, (snapshot) => {
+                const notesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                currentRecentNotes = notesData.slice(0, 3); // Update global variable
+                updateRecentItemsDisplay(); // Re-render combined display
+            }, (error) => {
+                console.error("Error fetching recent notes:", error);
+                recentItemsList.innerHTML += `<p class="text-red-500">Error al cargar notas recientes.</p>`;
+            });
+
+            // Fetch recent projects
+            const projectsCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/projects`);
+            const qProjects = query(projectsCollectionRef, orderBy('lastEdited', 'desc'));
+            onSnapshot(qProjects, (snapshot) => {
+                const projectsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                currentRecentProjects = projectsData.slice(0, 2); // Update global variable
+                updateRecentItemsDisplay(); // Re-render combined display
+            }, (error) => {
+                console.error("Error fetching recent projects:", error);
+                recentItemsList.innerHTML += `<p class="text-red-500">Error al cargar proyectos recientes.</p>`;
+            });
+        }
+
+        function updateRecentItemsDisplay() {
+            const recentItemsList = document.getElementById('recent-items-list');
+            let combinedHtml = '';
+
+            if (currentRecentNotes.length === 0 && currentRecentProjects.length === 0) {
+                combinedHtml = `<p class="text-gray-500">No hay elementos recientes. ¡Crea uno nuevo!</p>`;
+            } else {
+                currentRecentNotes.forEach(note => {
+                    combinedHtml += `
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg shadow-sm">
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-500 mr-3"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                                <div>
+                                    <p class="font-medium text-gray-800">${note.title}</p>
+                                    <p class="text-sm text-gray-500">Editado ${new Date(note.lastEdited).toLocaleDateString()}</p>
+                                </div>
+                            </div>
+                            <button class="text-blue-600 hover:text-blue-800" onclick="navigate('notes')">&gt;</button>
+                        </div>
+                    `;
+                });
+                currentRecentProjects.forEach(project => {
+                    combinedHtml += `
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg shadow-sm">
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-500 mr-3"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                                <div>
+                                    <p class="font-medium text-gray-800">${project.name}</p>
+                                    <p class="text-sm text-gray-500">Editado ${new Date(project.lastEdited).toLocaleDateString()}</p>
+                                </div>
+                            </div>
+                            <button class="text-blue-600 hover:text-blue-800" onclick="navigate('projects')">&gt;</button>
+                        </div>
+                    `;
+                });
+            }
+            recentItemsList.innerHTML = combinedHtml;
+        }
+
+
+        // --- Notes Page ---
+        let currentEditingNote = null; // Stores the note object being edited
+
+        function renderNotesPage() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="p-4 md:p-8 bg-white rounded-lg shadow-md min-h-full flex flex-col lg:flex-row gap-8">
+                    <div class="w-full lg:w-1/3 border-r border-gray-200 pr-4">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-2xl font-semibold text-gray-800">Notas</h2>
+                            <button id="new-note-button" class="flex items-center px-3 py-1 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-200 text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-1"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                Nueva Nota
+                            </button>
+                        </div>
+                        <div id="notes-list" class="space-y-3 max-h-[calc(100vh-200px)] overflow-y-auto">
+                            <p class="text-gray-500">Cargando notas...</p>
+                        </div>
+                    </div>
+
+                    <div class="w-full lg:w-2/3 flex flex-col">
+                        <div class="mb-4">
+                            <input
+                                type="text"
+                                id="note-title-input"
+                                placeholder="Título de la nota"
+                                class="w-full p-3 border border-gray-300 rounded-lg text-xl font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+                        <div class="flex-grow mb-4">
+                            <textarea
+                                id="note-content-textarea"
+                                placeholder="Empieza a escribir tu nota aquí..."
+                                class="w-full h-full p-3 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                            ></textarea>
+                        </div>
+                        <div class="flex justify-end space-x-3">
+                            <button id="save-note-button" class="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition-colors duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                                Guardar Nota
+                            </button>
+                            <button id="cancel-edit-note-button" class="flex items-center px-4 py-2 bg-gray-300 text-gray-800 rounded-lg shadow-md hover:bg-gray-400 transition-colors duration-200 hidden">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                                Cancelar Edición
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('new-note-button').onclick = handleNewNote;
+            document.getElementById('save-note-button').onclick = handleSaveNote;
+            document.getElementById('cancel-edit-note-button').onclick = handleNewNote; // Reuses handleNewNote to clear editor
+
+            loadNotes();
+        }
+
+        function handleNewNote() {
+            currentEditingNote = null;
+            document.getElementById('note-title-input').value = '';
+            document.getElementById('note-content-textarea').value = '';
+            document.getElementById('cancel-edit-note-button').classList.add('hidden');
+        }
+
+        function handleEditNote(note) {
+            currentEditingNote = note;
+            document.getElementById('note-title-input').value = note.title;
+            document.getElementById('note-content-textarea').value = note.content;
+            document.getElementById('cancel-edit-note-button').classList.remove('hidden');
+        }
+
+        async function handleSaveNote() {
+            if (!db || !currentUserId) {
+                showModal('Error: Base de datos o ID de usuario no disponible.');
+                return;
+            }
+
+            const noteTitle = document.getElementById('note-title-input').value;
+            const noteContent = document.getElementById('note-content-textarea').value;
+
+            const noteData = {
+                title: noteTitle || 'Nota sin título',
+                content: noteContent,
+                lastEdited: Date.now(),
+            };
+
+            try {
+                if (currentEditingNote) {
+                    const noteRef = doc(db, `artifacts/${appId}/users/${currentUserId}/notes`, currentEditingNote.id);
+                    await updateDoc(noteRef, noteData);
+                    showModal('Nota actualizada con éxito!');
+                } else {
+                    await addDoc(collection(db, `artifacts/${appId}/users/${currentUserId}/notes`), noteData);
+                    showModal('Nota guardada con éxito!');
+                }
+                handleNewNote(); // Clear editor after saving
+            } catch (e) {
+                console.error("Error saving note: ", e);
+                showModal('Error al guardar la nota.');
+            }
+        }
+
+        function handleDeleteNote(noteId) {
+            showModal('¿Estás seguro de que quieres eliminar esta nota? Esta acción no se puede deshacer.', true, async () => {
+                if (!db || !currentUserId) {
+                    showModal('Error: Base de datos o ID de usuario no disponible.');
+                    return;
+                }
+                try {
+                    await deleteDoc(doc(db, `artifacts/${appId}/users/${currentUserId}/notes`, noteId));
+                    showModal('Nota eliminada con éxito!');
+                    if (currentEditingNote && currentEditingNote.id === noteId) {
+                        handleNewNote();
+                    }
+                } catch (e) {
+                    console.error("Error deleting note: ", e);
+                    showModal('Error al eliminar la nota.');
+                }
+            });
+        }
+
+        function loadNotes() {
+            console.log("loadNotes called. currentUserId:", currentUserId); // Added debug log
+            if (!db || !currentUserId) {
+                document.getElementById('notes-list').innerHTML = `<p class="text-gray-500">No se pueden cargar las notas. Inicia sesión o verifica la configuración de Firebase.</p>`;
+                console.error("loadNotes: DB or currentUserId not available.", { db, currentUserId }); // Added debug log
+                return;
+            }
+
+            const notesListDiv = document.getElementById('notes-list');
+            const notesCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/notes`);
+            const q = query(notesCollectionRef, orderBy('lastEdited', 'desc'));
+
+            onSnapshot(q, (snapshot) => {
+                let notesHtml = '';
+                if (snapshot.empty) {
+                    notesHtml = `<p class="text-gray-500">No hay notas. ¡Crea una nueva!</p>`;
+                } else {
+                    snapshot.docs.forEach(docSnapshot => {
+                        const note = { id: docSnapshot.id, ...docSnapshot.data() };
+                        const isActive = currentEditingNote && currentEditingNote.id === note.id ? 'bg-blue-100' : 'bg-gray-50 hover:bg-gray-100';
+                        notesHtml += `
+                            <div class="flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors duration-200 ${isActive}" data-note-id="${note.id}">
+                                <div>
+                                    <p class="font-medium text-gray-800 truncate">${note.title}</p>
+                                    <p class="text-xs text-gray-500">Editado ${new Date(note.lastEdited).toLocaleDateString()}</p>
+                                </div>
+                                <button class="p-1 rounded-full text-red-500 hover:bg-red-100 delete-note-button" data-note-id="${note.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                </button>
+                            </div>
+                        `;
+                    });
+                }
+                notesListDiv.innerHTML = notesHtml;
+
+                // Attach event listeners to dynamically created elements
+                notesListDiv.querySelectorAll('[data-note-id]').forEach(el => {
+                    if (!el.classList.contains('delete-note-button')) { // Avoid attaching click to delete button
+                        el.onclick = () => {
+                            const noteId = el.dataset.noteId;
+                            const note = snapshot.docs.find(d => d.id === noteId).data();
+                            handleEditNote({ id: noteId, ...note });
+                        };
+                    }
+                });
+                notesListDiv.querySelectorAll('.delete-note-button').forEach(btn => {
+                    btn.onclick = (e) => {
+                        e.stopPropagation(); // Prevent parent div click
+                        handleDeleteNote(btn.dataset.noteId);
+                    };
+                });
+
+            }, (error) => {
+                console.error("Error loading notes:", error);
+                notesListDiv.innerHTML = `<p class="text-red-500">Error al cargar las notas.</p>`;
+            });
+        }
+
+        // --- Projects Page ---
+        let currentSelectedProject = null;
+
+        function renderProjectsPage() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="p-4 md:p-8 bg-white rounded-lg shadow-md min-h-full flex flex-col lg:flex-row gap-8">
+                    <div class="w-full lg:w-1/3 border-r border-gray-200 pr-4">
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Proyectos</h2>
+                        <div class="flex mb-4">
+                            <input
+                                type="text"
+                                id="new-project-name-input"
+                                placeholder="Nombre del nuevo proyecto"
+                                class="flex-grow p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <button id="add-project-button" class="px-4 py-2 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700 transition-colors duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </button>
+                        </div>
+                        <div id="projects-list" class="space-y-3 max-h-[calc(100vh-200px)] overflow-y-auto">
+                            <p class="text-gray-500">Cargando proyectos...</p>
+                        </div>
+                    </div>
+
+                    <div id="project-details" class="w-full lg:w-2/3 flex flex-col">
+                        <div class="flex items-center justify-center h-full text-gray-500 text-lg">
+                            Selecciona un proyecto para ver sus detalles o crea uno nuevo.
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('add-project-button').onclick = handleAddProject;
+            loadProjects();
+        }
+
+        async function handleAddProject() {
+            if (!db || !currentUserId) {
+                showModal('Error: Base de datos o ID de usuario no disponible.');
+                return;
+            }
+            const newProjectNameInput = document.getElementById('new-project-name-input');
+            const projectName = newProjectNameInput.value.trim();
+
+            if (!projectName) {
+                showModal('El nombre del proyecto no puede estar vacío.');
+                return;
+            }
+
+            const projectData = {
+                name: projectName,
+                description: 'Gestiona tareas, líneas de tiempo y miembros del equipo.',
+                lastEdited: Date.now(),
+                tasks: [],
+            };
+
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/users/${currentUserId}/projects`), projectData);
+                newProjectNameInput.value = '';
+                showModal('Proyecto creado con éxito!');
+            } catch (e) {
+                console.error("Error adding project: ", e);
+                showModal('Error al crear el proyecto.');
+            }
+        }
+
+        function handleDeleteProject(projectId) {
+            showModal('¿Estás seguro de que quieres eliminar este proyecto? Esta acción no se puede deshacer.', true, async () => {
+                if (!db || !currentUserId) {
+                    showModal('Error: Base de datos o ID de usuario no disponible.');
+                    return;
+                }
+                try {
+                    await deleteDoc(doc(db, `artifacts/${appId}/users/${currentUserId}/projects`, projectId));
+                    showModal('Proyecto eliminado con éxito!');
+                    if (currentSelectedProject && currentSelectedProject.id === projectId) {
+                        currentSelectedProject = null;
+                        renderProjectDetails(); // Clear details pane
+                    }
+                } catch (e) {
+                    console.error("Error deleting project: ", e);
+                    showModal('Error al eliminar el proyecto.');
+                }
+            });
+        }
+
+        function loadProjects() {
+            console.log("loadProjects called. currentUserId:", currentUserId); // Added debug log
+            if (!db || !currentUserId) {
+                document.getElementById('projects-list').innerHTML = `<p class="text-gray-500">No se pueden cargar los proyectos. Inicia sesión o verifica la configuración de Firebase.</p>`;
+                console.error("loadProjects: DB or currentUserId not available.", { db, currentUserId }); // Added debug log
+                return;
+            }
+
+            const projectsListDiv = document.getElementById('projects-list');
+            const projectsCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/projects`);
+            const q = query(projectsCollectionRef, orderBy('lastEdited', 'desc'));
+
+            onSnapshot(q, (snapshot) => {
+                let projectsHtml = '';
+                if (snapshot.empty) {
+                    projectsHtml = `<p class="text-gray-500">No hay proyectos. ¡Crea uno nuevo!</p>`;
+                } else {
+                    snapshot.docs.forEach(docSnapshot => {
+                        const project = { id: docSnapshot.id, ...docSnapshot.data() };
+                        const isActive = currentSelectedProject && currentSelectedProject.id === project.id ? 'bg-blue-100' : 'bg-gray-50 hover:bg-gray-100';
+                        projectsHtml += `
+                            <div class="flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors duration-200 ${isActive}" data-project-id="${project.id}">
+                                <div>
+                                    <p class="font-medium text-gray-800 truncate">${project.name}</p>
+                                    <p class="text-xs text-gray-500">Editado ${new Date(project.lastEdited).toLocaleDateString()}</p>
+                                </div>
+                                <button class="p-1 rounded-full text-red-500 hover:bg-red-100 delete-project-button" data-project-id="${project.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                </button>
+                            </div>
+                        `;
+                    });
+                }
+                projectsListDiv.innerHTML = projectsHtml;
+
+                projectsListDiv.querySelectorAll('[data-project-id]').forEach(el => {
+                    if (!el.classList.contains('delete-project-button')) {
+                        el.onclick = () => {
+                            const projectId = el.dataset.projectId;
+                            currentSelectedProject = snapshot.docs.find(d => d.id === projectId).data();
+                            currentSelectedProject.id = projectId; // Add ID to the object
+                            renderProjectDetails();
+                        };
+                    }
+                });
+                projectsListDiv.querySelectorAll('.delete-project-button').forEach(btn => {
+                    btn.onclick = (e) => {
+                        e.stopPropagation();
+                        handleDeleteProject(btn.dataset.projectId);
+                    };
+                });
+            }, (error) => {
+                console.error("Error loading projects:", error);
+                projectsListDiv.innerHTML = `<p class="text-red-500">Error al cargar los proyectos.</p>`;
+            });
+        }
+
+        function renderProjectDetails() {
+            const projectDetailsDiv = document.getElementById('project-details');
+            if (!currentSelectedProject) {
+                projectDetailsDiv.innerHTML = `
+                    <div class="flex items-center justify-center h-full text-gray-500 text-lg">
+                        Selecciona un proyecto para ver sus detalles o crea uno nuevo.
+                    </div>
+                `;
+                return;
+            }
+
+            const project = currentSelectedProject;
+            let tasksHtml = '';
+            if (project.tasks && project.tasks.length > 0) {
+                tasksHtml = `<ul class="space-y-2">`;
+                project.tasks.forEach(task => {
+                    tasksHtml += `
+                        <li class="p-3 bg-gray-50 rounded-lg flex items-center justify-between">
+                            <span>${task.name} - <span class="font-medium">${task.status}</span></span>
+                            <span class="text-sm text-gray-500">Fecha límite: ${task.deadline}</span>
+                        </li>
+                    `;
+                });
+                tasksHtml += `</ul>`;
+            } else {
+                tasksHtml = `<p class="text-gray-500">No hay tareas para este proyecto.</p>`;
+            }
+
+            projectDetailsDiv.innerHTML = `
+                <h1 class="text-3xl font-bold text-gray-800 mb-4">${project.name}</h1>
+                <p class="text-gray-600 mb-6">${project.description}</p>
+
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Tareas</h3>
+                    ${tasksHtml}
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Línea de Tiempo</h3>
+                        <p class="text-gray-500">La línea de tiempo del proyecto se mostrará aquí.</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Documentos</h3>
+                        <p class="text-gray-500">Los documentos del proyecto se mostrarán aquí.</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm col-span-full">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Equipo</h3>
+                        <p class="text-gray-500">Los miembros del equipo se mostrarán aquí.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Tasks Page ---
+        function renderTasksPage() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="p-4 md:p-8 bg-white rounded-lg shadow-md min-h-full">
+                    <h1 class="text-3xl font-bold text-gray-800 mb-6">Mis Tareas</h1>
+
+                    <div class="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-3">Añadir Nueva Tarea</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                            <input
+                                type="text"
+                                id="new-task-name-input"
+                                placeholder="Nombre de la tarea"
+                                class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <input
+                                type="date"
+                                id="new-task-deadline-input"
+                                placeholder="Fecha límite"
+                                class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <input
+                                type="text"
+                                id="new-task-assignee-input"
+                                placeholder="Asignado a (opcional)"
+                                class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+                        <button id="add-task-button" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Añadir Tarea
+                        </button>
+                    </div>
+
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Todas las Tareas</h2>
+                    <div id="tasks-list" class="space-y-4">
+                        <p class="text-gray-500">Cargando tareas...</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('add-task-button').onclick = handleAddTask;
+            loadTasks();
+        }
+
+        async function handleAddTask() {
+            if (!db || !currentUserId) {
+                showModal('Error: Base de datos o ID de usuario no disponible.');
+                return;
+            }
+            const newTaskName = document.getElementById('new-task-name-input').value.trim();
+            const newTaskDeadline = document.getElementById('new-task-deadline-input').value.trim();
+            const newTaskAssignee = document.getElementById('new-task-assignee-input').value.trim();
+
+            if (!newTaskName || !newTaskDeadline) {
+                showModal('El nombre de la tarea y la fecha límite no pueden estar vacíos.');
+                return;
+            }
+
+            const taskData = {
+                name: newTaskName,
+                status: 'To Do',
+                deadline: newTaskDeadline,
+                assignee: newTaskAssignee || 'Sin asignar',
+                createdAt: Date.now(),
+            };
+
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/users/${currentUserId}/tasks`), taskData);
+                document.getElementById('new-task-name-input').value = '';
+                document.getElementById('new-task-deadline-input').value = '';
+                document.getElementById('new-task-assignee-input').value = '';
+                showModal('Tarea añadida con éxito!');
+            } catch (e) {
+                console.error("Error adding task: ", e);
+                showModal('Error al añadir la tarea.');
+            }
+        }
+
+        async function handleUpdateTaskStatus(taskId, currentStatus) {
+            if (!db || !currentUserId) {
+                showModal('Error: Base de datos o ID de usuario no disponible.');
+                return;
+            }
+            const newStatus = currentStatus === 'To Do' ? 'In Progress' : currentStatus === 'In Progress' ? 'Completed' : 'To Do';
+            try {
+                const taskRef = doc(db, `artifacts/${appId}/users/${currentUserId}/tasks`, taskId);
+                await updateDoc(taskRef, { status: newStatus });
+                showModal('Estado de la tarea actualizado con éxito!');
+            } catch (e) {
+                console.error("Error updating task status: ", e);
+                showModal('Error al actualizar el estado de la tarea.');
+            }
+        }
+
+        function handleDeleteTask(taskId) {
+            showModal('¿Estás seguro de que quieres eliminar esta tarea? Esta acción no se puede deshacer.', true, async () => {
+                if (!db || !currentUserId) {
+                    showModal('Error: Base de datos o ID de usuario no disponible.');
+                    return;
+                }
+                try {
+                    await deleteDoc(doc(db, `artifacts/${appId}/users/${currentUserId}/tasks`, taskId));
+                    showModal('Tarea eliminada con éxito!');
+                } catch (e) {
+                    console.error("Error deleting task: ", e);
+                    showModal('Error al eliminar la tarea.');
+                }
+            });
+        }
+
+        function getStatusColor(status) {
+            switch (status) {
+                case 'To Do': return 'bg-blue-100 text-blue-800';
+                case 'In Progress': return 'bg-yellow-100 text-yellow-800';
+                case 'Completed': return 'bg-green-100 text-green-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        function loadTasks() {
+            console.log("loadTasks called. currentUserId:", currentUserId); // Added debug log
+            if (!db || !currentUserId) {
+                document.getElementById('tasks-list').innerHTML = `<p class="text-gray-500">No se pueden cargar las tareas. Inicia sesión o verifica la configuración de Firebase.</p>`;
+                console.error("loadTasks: DB or currentUserId not available.", { db, currentUserId }); // Added debug log
+                return;
+            }
+
+            const tasksListDiv = document.getElementById('tasks-list');
+            const tasksCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/tasks`);
+            const q = query(tasksCollectionRef, orderBy('deadline', 'asc'));
+
+            onSnapshot(q, (snapshot) => {
+                let tasksHtml = '';
+                if (snapshot.empty) {
+                    tasksHtml = `<p class="text-gray-500">No hay tareas pendientes. ¡Añade una!</p>`;
+                } else {
+                    snapshot.docs.forEach(docSnapshot => {
+                        const task = { id: docSnapshot.id, ...docSnapshot.data() };
+                        const statusColorClass = getStatusColor(task.status);
+                        tasksHtml += `
+                            <div class="p-4 bg-gray-50 rounded-lg shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between">
+                                <div class="mb-2 md:mb-0">
+                                    <p class="font-medium text-gray-800 text-lg">${task.name}</p>
+                                    <p class="text-sm text-gray-600">Fecha límite: ${task.deadline}</p>
+                                    <p class="text-sm text-gray-600">Asignado a: ${task.assignee}</p>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <span class="px-3 py-1 rounded-full text-sm font-semibold ${statusColorClass}">
+                                        ${task.status}
+                                    </span>
+                                    <button class="p-2 rounded-full text-blue-600 hover:bg-blue-100 transition-colors duration-200 update-task-status-button" title="Cambiar estado" data-task-id="${task.id}" data-current-status="${task.status}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                    </button>
+                                    <button class="p-2 rounded-full text-red-600 hover:bg-red-100 transition-colors duration-200 delete-task-button" title="Eliminar tarea" data-task-id="${task.id}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                tasksListDiv.innerHTML = tasksHtml;
+
+                tasksListDiv.querySelectorAll('.update-task-status-button').forEach(btn => {
+                    btn.onclick = () => handleUpdateTaskStatus(btn.dataset.taskId, btn.dataset.currentStatus);
+                });
+                tasksListDiv.querySelectorAll('.delete-task-button').forEach(btn => {
+                    btn.onclick = () => handleDeleteTask(btn.dataset.taskId);
+                });
+            }, (error) => {
+                console.error("Error loading tasks:", error);
+                tasksListDiv.innerHTML = `<p class="text-red-500">Error al cargar las tareas.</p>`;
+            });
+        }
+
+        // --- Databases Page (Placeholder) ---
+        function renderDatabasesPage() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="p-4 md:p-8 bg-white rounded-lg shadow-md min-h-full flex items-center justify-center">
+                    <div class="text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-16 h-16 text-gray-400 mx-auto mb-4"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 12V7A9 3 0 0 0 21 7v5"></path><path d="M3 12A9 3 0 0 0 21 12"></path><path d="M3 19v-5A9 3 0 0 0 21 14v5"></path><path d="M3 19A9 3 0 0 0 21 19"></path></svg>
+                        <h1 class="text-3xl font-bold text-gray-800 mb-2">Bases de Datos</h1>
+                        <p class="text-gray-600 text-lg">Esta sección está en desarrollo. Aquí podrás gestionar tus bases de datos personalizadas.</p>
+                        <button class="mt-6 px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-200">
+                            Añadir Nueva Base de Datos
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Settings Page ---
+        function renderSettingsPage() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="p-4 md:p-8 bg-white rounded-lg shadow-md min-h-full">
+                    <h1 class="text-3xl font-bold text-gray-800 mb-6">Configuración</h1>
+
+                    <div class="space-y-8">
+                        <div class="border border-gray-200 rounded-lg p-6">
+                            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Mi Cuenta</h2>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-gray-600 w-1/4">Email</label>
+                                    <input
+                                        type="email"
+                                        value="sophia.carter@email.com"
+                                        readonly
+                                        class="flex-grow p-2 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+                                    />
+                                    <button class="ml-4 p-2 text-gray-500 hover:text-gray-800">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                    </button>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-gray-600 w-1/4">Nombre</label>
+                                    <input
+                                        type="text"
+                                        id="settings-username-input"
+                                        value="${currentUserName}"
+                                        class="flex-grow p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                    <button id="save-profile-button" class="ml-4 p-2 text-blue-600 hover:text-blue-800">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                                    </button>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-gray-600 w-1/4">Foto</label>
+                                    <div class="flex-grow flex items-center">
+                                        <img id="settings-profile-picture-display" src="${currentProfilePicture || ''}" alt="Profile" class="w-12 h-12 rounded-full object-cover mr-3 ${currentProfilePicture ? '' : 'hidden'}">
+                                        <div id="settings-profile-initial-display" class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 text-sm mr-3 ${currentProfilePicture ? 'hidden' : ''}">
+                                            ${currentUserName ? currentUserName[0].toUpperCase() : 'U'}
+                                        </div>
+                                        <span class="text-gray-700">Actualiza tu foto de perfil</span>
+                                    </div>
+                                    <label for="settings-profile-picture-upload" class="ml-4 p-2 text-blue-600 hover:text-blue-800 cursor-pointer">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                        <input
+                                            id="settings-profile-picture-upload"
+                                            type="file"
+                                            accept="image/*"
+                                            class="hidden"
+                                        />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 rounded-lg p-6">
+                            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Preferencias</h2>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                    <span class="text-gray-600">Tema</span>
+                                    <span class="text-gray-700 flex items-center">Light <span class="ml-2 text-gray-400">&gt;</span></span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                    <span class="text-gray-600">Idioma</span>
+                                    <span class="text-gray-700 flex items-center">Español <span class="ml-2 text-gray-400">&gt;</span></span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                    <span class="text-gray-600">Notificaciones</span>
+                                    <span class="text-gray-700 flex items-center">On <span class="ml-2 text-gray-400">&gt;</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 rounded-lg p-6">
+                            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Integraciones</h2>
+                            <div class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <span class="text-gray-600">Gestionar Integraciones</span>
+                                <span class="text-gray-700 flex items-center">Conectar con otras apps y servicios <span class="ml-2 text-gray-400">&gt;</span></span>
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 rounded-lg p-6">
+                            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Facturación</h2>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                    <span class="text-gray-600">Plan Actual</span>
+                                    <span class="text-gray-700 flex items-center">Gratis <span class="ml-2 text-gray-400">&gt;</span></span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                    <span class="text-gray-600">Método de Pago</span>
+                                    <span class="text-gray-700 flex items-center">No hay tarjeta añadida <span class="ml-2 text-gray-400">&gt;</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border border-red-300 rounded-lg p-6 bg-red-50">
+                            <h2 class="text-2xl font-semibold text-red-800 mb-4">Zona de Peligro</h2>
+                            <button id="delete-account-button" class="w-full text-left p-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center justify-between">
+                                <span>Eliminar Cuenta</span>
+                                <span class="text-red-200">&gt;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('save-profile-button').onclick = handleSaveProfileSettings;
+            document.getElementById('settings-profile-picture-upload').onchange = handleProfilePictureUploadSettings;
+            document.getElementById('delete-account-button').onclick = handleDeleteAccountSettings;
+
+            // Update initial display of profile picture
+            updateSettingsProfilePictureDisplay();
+        }
+
+        async function handleSaveProfileSettings() {
+            if (!db || !currentUserId) {
+                showModal('Error: Base de datos o ID de usuario no disponible.');
+                return;
+            }
+            const newUserName = document.getElementById('settings-username-input').value;
+            try {
+                const userProfileRef = doc(db, `artifacts/${appId}/users/${currentUserId}/profile/data`);
+                await updateDoc(userProfileRef, { userName: newUserName });
+                currentUserName = newUserName; // Update global state
+                updateSidebarProfile(); // Update sidebar immediately
+                showModal('Perfil actualizado con éxito!');
+            } catch (e) {
+                console.error("Error updating user name:", e);
+                showModal('Error al actualizar el nombre de usuario.');
+            }
+        }
+
+        function handleProfilePictureUploadSettings(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = async () => {
+                    const base64String = reader.result;
+                    currentProfilePicture = base64String; // Update global state
+                    updateSidebarProfile(); // Update sidebar immediately
+                    updateSettingsProfilePictureDisplay(); // Update settings page display
+
+                    if (db && currentUserId) {
+                        const userProfileRef = doc(db, `artifacts/${appId}/users/${currentUserId}/profile/data`);
+                        try {
+                            await updateDoc(userProfileRef, { profilePicture: base64String });
+                            showModal('Foto de perfil actualizada con éxito!');
+                        } catch (e) {
+                            console.error("Error updating profile picture:", e);
+                            showModal('Error al actualizar la foto de perfil.');
+                        }
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateSettingsProfilePictureDisplay() {
+            const settingsProfilePic = document.getElementById('settings-profile-picture-display');
+            const settingsProfileInitial = document.getElementById('settings-profile-initial-display');
+            const settingsUsernameInput = document.getElementById('settings-username-input');
+
+            settingsUsernameInput.value = currentUserName; // Ensure input reflects currentUserName
+
+            if (currentProfilePicture) {
+                settingsProfilePic.src = currentProfilePicture;
+                settingsProfilePic.classList.remove('hidden');
+                settingsProfileInitial.classList.add('hidden');
+            } else {
+                settingsProfileInitial.textContent = currentUserName ? currentUserName[0].toUpperCase() : 'U';
+                settingsProfileInitial.classList.remove('hidden');
+                settingsProfilePic.classList.add('hidden');
+            }
+        }
+
+        function handleDeleteAccountSettings() {
+            showModal('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.', true, () => {
+                console.log("Cuenta eliminada (simulado)");
+                showModal('Tu cuenta ha sido eliminada (simulado).');
+                // In a real app, you would handle Firebase user deletion here
+            });
+        }
+
+        // --- Pomodoro Timer Page ---
+        let pomodoroMinutes = 25;
+        let pomodoroSeconds = 0;
+        let pomodoroIsActive = false;
+        let pomodoroCurrentSession = 'Work Session'; // 'Work Session', 'Short Break', 'Long Break'
+        let pomodoroWorkInterval = 25;
+        let pomodoroShortBreak = 5;
+        let pomodoroLongBreak = 15;
+        let pomodoroSessionCount = 0;
+        let pomodoroInterval = null;
+
+        function renderPomodoroTimerPage() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="p-4 md:p-8 bg-white rounded-lg shadow-md min-h-full flex flex-col items-center justify-center">
+                    <h1 class="text-4xl font-bold text-gray-800 mb-8">Temporizador Pomodoro</h1>
+
+                    <div class="flex items-center justify-center mb-8 space-x-4">
+                        <div class="bg-blue-600 text-white rounded-xl p-6 flex flex-col items-center justify-center min-w-[150px] min-h-[150px] shadow-lg">
+                            <span id="pomodoro-minutes" class="text-6xl font-bold">00</span>
+                            <span class="text-lg">Minutos</span>
+                        </div>
+                        <span class="text-6xl font-bold text-gray-700">:</span>
+                        <div class="bg-gray-200 text-gray-800 rounded-xl p-6 flex flex-col items-center justify-center min-w-[150px] min-h-[150px] shadow-lg">
+                            <span id="pomodoro-seconds" class="text-6xl font-bold">00</span>
+                            <span class="text-lg">Segundos</span>
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-4 mb-8">
+                        <button id="pomodoro-start" class="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-200 text-lg font-semibold">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            Iniciar
+                        </button>
+                        <button id="pomodoro-pause" class="flex items-center px-6 py-3 bg-gray-300 text-gray-800 rounded-lg shadow-md hover:bg-gray-400 transition-colors duration-200 text-lg font-semibold">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-2"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                            Pausar
+                        </button>
+                        <button id="pomodoro-reset" class="flex items-center px-6 py-3 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition-colors duration-200 text-lg font-semibold">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.76 2.75L3 8"></path><path d="M3 3v5h5"></path></svg>
+                            Reiniciar
+                        </button>
+                    </div>
+
+                    <div class="w-full max-w-lg p-6 bg-gray-50 rounded-lg shadow-sm mb-8">
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Configuración del Temporizador</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div>
+                                <label for="work-interval" class="block text-gray-700 text-sm font-medium mb-1">Intervalo de Trabajo</label>
+                                <select
+                                    id="work-interval"
+                                    class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    ${Array.from({ length: 60 }, (_, i) => `<option value="${i + 1}">${i + 1} minutos</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label for="short-break" class="block text-gray-700 text-sm font-medium mb-1">Descanso Corto</label>
+                                <select
+                                    id="short-break"
+                                    class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    ${Array.from({ length: 10 }, (_, i) => `<option value="${i + 1}">${i + 1} minutos</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label for="long-break" class="block text-gray-700 text-sm font-medium mb-1">Descanso Largo</label>
+                                <select
+                                    id="long-break"
+                                    class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    ${Array.from({ length: 30 }, (_, i) => `<option value="${i + 1}">${i + 1} minutos</option>`).join('')}
+                                </select>
+                            </div>
+                        </div>
+                        <button class="text-blue-600 hover:underline flex items-center">
+                            Ajustes Avanzados <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 ml-2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+
+                    <div class="w-full max-w-lg p-4 bg-blue-100 rounded-lg shadow-sm text-center">
+                        <h3 class="text-xl font-semibold text-blue-800 mb-2">Estado Actual</h3>
+                        <p id="pomodoro-current-session" class="text-blue-700 text-lg font-medium">Work Session</p>
+                        <p class="text-blue-600 mt-2">¡Concéntrate en tu tarea!</p>
+                    </div>
+                </div>
+            `;
+
+            // Initialize select values
+            document.getElementById('work-interval').value = pomodoroWorkInterval;
+            document.getElementById('short-break').value = pomodoroShortBreak;
+            document.getElementById('long-break').value = pomodoroLongBreak;
+
+            // Attach event listeners
+            document.getElementById('pomodoro-start').onclick = handlePomodoroStart;
+            document.getElementById('pomodoro-pause').onclick = handlePomodoroPause;
+            document.getElementById('pomodoro-reset').onclick = handlePomodoroReset;
+            document.getElementById('work-interval').onchange = (e) => {
+                pomodoroWorkInterval = parseInt(e.target.value);
+                if (pomodoroCurrentSession === 'Work Session') setPomodoroTimer(pomodoroWorkInterval, 0);
+            };
+            document.getElementById('short-break').onchange = (e) => {
+                pomodoroShortBreak = parseInt(e.target.value);
+                if (pomodoroCurrentSession === 'Short Break') setPomodoroTimer(pomodoroShortBreak, 0);
+            };
+            document.getElementById('long-break').onchange = (e) => {
+                pomodoroLongBreak = parseInt(e.target.value);
+                if (pomodoroCurrentSession === 'Long Break') setPomodoroTimer(pomodoroLongBreak, 0);
+            };
+
+            setPomodoroTimer(pomodoroWorkInterval, 0); // Initial display
+        }
+
+        function updatePomodoroDisplay() {
+            document.getElementById('pomodoro-minutes').textContent = String(pomodoroMinutes).padStart(2, '0');
+            document.getElementById('pomodoro-seconds').textContent = String(pomodoroSeconds).padStart(2, '0');
+            document.getElementById('pomodoro-current-session').textContent = pomodoroCurrentSession;
+        }
+
+        function setPomodoroTimer(min, sec) {
+            pomodoroMinutes = min;
+            pomodoroSeconds = sec;
+            updatePomodoroDisplay();
+        }
+
+        function handlePomodoroStart() {
+            if (!pomodoroIsActive) {
+                pomodoroIsActive = true;
+                pomodoroInterval = setInterval(() => {
+                    if (pomodoroSeconds === 0) {
+                        if (pomodoroMinutes === 0) {
+                            clearInterval(pomodoroInterval);
+                            pomodoroIsActive = false;
+                            handlePomodoroSessionEnd();
+                        } else {
+                            pomodoroMinutes--;
+                            pomodoroSeconds = 59;
+                        }
+                    } else {
+                        pomodoroSeconds--;
+                    }
+                    updatePomodoroDisplay();
+                }, 1000);
+            }
+        }
+
+        function handlePomodoroPause() {
+            clearInterval(pomodoroInterval);
+            pomodoroIsActive = false;
+        }
+
+        function handlePomodoroReset() {
+            clearInterval(pomodoroInterval);
+            pomodoroIsActive = false;
+            if (pomodoroCurrentSession === 'Work Session') {
+                setPomodoroTimer(pomodoroWorkInterval, 0);
+            } else if (pomodoroCurrentSession === 'Short Break') {
+                setPomodoroTimer(pomodoroShortBreak, 0);
+            } else { // Long Break
+                setPomodoroTimer(pomodoroLongBreak, 0);
+            }
+            pomodoroSessionCount = 0; // Reset session count on full reset
+        }
+
+        function handlePomodoroSessionEnd() {
+            if (pomodoroCurrentSession === 'Work Session') {
+                pomodoroSessionCount++;
+                if (pomodoroSessionCount % 4 === 0) {
+                    pomodoroCurrentSession = 'Long Break';
+                    setPomodoroTimer(pomodoroLongBreak, 0);
+                } else {
+                    pomodoroCurrentSession = 'Short Break';
+                    setPomodoroTimer(pomodoroShortBreak, 0);
+                }
+            } else { // Break ended, go back to work
+                pomodoroCurrentSession = 'Work Session';
+                setPomodoroTimer(pomodoroWorkInterval, 0);
+            }
+            updatePomodoroDisplay();
+            // Optionally, auto-start next session: handlePomodoroStart();
+        }
+
+
+        // --- Event Listeners for Navigation ---
+        document.getElementById('nav-home').onclick = () => navigate('home');
+        document.getElementById('nav-notes').onclick = () => navigate('notes');
+        document.getElementById('nav-projects').onclick = () => navigate('projects');
+        document.getElementById('nav-tasks').onclick = () => navigate('tasks');
+        document.getElementById('nav-databases').onclick = () => navigate('databases');
+        document.getElementById('nav-settings').onclick = () => navigate('settings');
+        document.getElementById('nav-pomodoro').onclick = () => navigate('pomodoro');
+
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').onclick = () => {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        };
+
+        // Sidebar profile picture upload
+        document.getElementById('profile-picture-upload-sidebar').onchange = (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = async () => {
+                    const base64String = reader.result;
+                    currentProfilePicture = base64String; // Update global state
+                    updateSidebarProfile(); // Update sidebar immediately
+
+                    if (db && currentUserId) {
+                        const userProfileRef = doc(db, `artifacts/${appId}/users/${currentUserId}/profile/data`);
+                        try {
+                            await updateDoc(userProfileRef, { profilePicture: base64String });
+                            showModal('Foto de perfil actualizada con éxito!');
+                        } catch (e) {
+                            console.error("Error updating profile picture:", e);
+                            showModal('Error al actualizar la foto de perfil.');
+                        }
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // Initial app load
+        window.onload = () => {
+            initializeFirebase();
+            // renderPage('home'); // Initial render is handled by initializeFirebase after auth state is ready
+        };
+    </script>
+</body>
+</html>
